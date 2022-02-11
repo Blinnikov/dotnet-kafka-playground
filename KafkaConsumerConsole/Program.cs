@@ -1,11 +1,26 @@
-﻿using Confluent.Kafka;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Confluent.Kafka;
+using KafkaConsumerConsole;
 
-Console.WriteLine("Starting Kafka Consumer");
+using IHost host = Host.CreateDefaultBuilder(args).Build();
+
+// Build a config object, using env vars and JSON providers.
+IConfiguration config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
+    .AddCommandLine(args)
+    .Build();
+
+// Get values from the config given their key and their target type.
+var settings = config.GetRequiredSection("Kafka").Get<KafkaSettings>();
+
+Console.WriteLine($"Starting Kafka Consumer for {settings.BootstrapServers}");
 
 var conf = new ConsumerConfig
 {
     GroupId = "test-consumer-group",
-    BootstrapServers = "localhost:9092",
+    BootstrapServers = settings.BootstrapServers,
     // Note: The AutoOffsetReset property determines the start offset in the event
     // there are not yet any committed offsets for the consumer group for the
     // topic/partitions of interest. By default, offsets are committed
@@ -46,3 +61,5 @@ using (var c = new ConsumerBuilder<Ignore, string>(conf).Build())
         c.Close();
     }
 }
+
+await host.RunAsync();
