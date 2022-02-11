@@ -1,0 +1,11 @@
+
+version: '3.4'
+
+services:
+  kafkaconsumerconsole:
+    image: kafkaconsumerconsole
+    build:
+      context: .
+      dockerfile: KafkaConsumerConsole/Dockerfile
+    environment:
+      - Kafka__BootstrapServers=host.docker.internal:9092
