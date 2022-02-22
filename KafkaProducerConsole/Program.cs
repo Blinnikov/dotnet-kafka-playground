@@ -8,6 +8,13 @@ await Parser.Default.ParseArguments<CommandLineOptions>(args)
 
 static async Task RunAsync(CommandLineOptions o)
 {
+    if (o.Admin) 
+    {
+        Console.WriteLine($"Calling Admin client");
+        await AdminClient.Run();
+        return;
+    }
+
     if (o.Batch)
     {
         Console.WriteLine($"Batching producing enabled. Current Arguments: -b {o.Batch}");

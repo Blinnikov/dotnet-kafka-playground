@@ -7,6 +7,9 @@ public class CommandLineOptions
     [Option('b', "batch", Required = false, HelpText = "Whether to use batch publishing.")]
     public bool Batch { get; set; }
 
+    [Option('k', "admin", Required = false, HelpText = "Whether to create and use admin client.")]
+    public bool Admin { get; set; }
+
     [Option('m', "message", Required = false, Default = "IB's first Kafka message", HelpText = "Message to produce.")]
     public string Message { get; set; }
 
